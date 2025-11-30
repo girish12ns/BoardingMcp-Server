@@ -15,6 +15,17 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     ALGORITHM: str = "HS256"
 
+
+    STG_BASE_URL:str
+    PARTNER_ID:str
+    AiSensy_API_Key:str
+    BUSINESS_ID:str
+
+
+
+
+
+
     #Databse connection
     mongodb_uri:str
     mongodb_db_name:str
