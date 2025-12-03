@@ -27,4 +27,14 @@ class Business_Profile_creation(BaseModel):
         }
 
 
+#Project creation for the whatsp Business
+class Project_creation(BaseModel):
+    name:str=Field(..., description="Name of the project")
+
+        class Config:
+        json_schema_extra = {
+            "example": {
+               "name":"API TEST PROJECT 1"
+            }
+        }
 
