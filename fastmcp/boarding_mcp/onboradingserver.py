@@ -1,8 +1,15 @@
 from fastmcp import FastMCP
 from fastmcp.server.auth.providers.jwt import StaticTokenVerifier
-from fastmcp.boarding_mcp.tools.boarding_tools import create_business,create_project_business
-from model.request import Business_Profile_creation,Project_creation
-
+from fastmcp.boarding_mcp.tools.boarding_tools import (
+    create_business,
+    create_project_business,
+    create_generated_embedded_signup_url
+)
+from model.request import (
+    Business_Profile_creation,
+    Project_creation,
+    embedde_signup_url  
+)
 
 # Define development tokens and their associated claims
 verifier = StaticTokenVerifier(
@@ -45,6 +52,18 @@ def creating_business_profile(payload:Business_Profile_creation)->dict:
 def creating_project_business(payload:Project_creation)->dict:
     """Creation of whatsp Business profile Creation"""
     return reate_project_business(payload)
+
+
+#Generating embbeding url link
+@mcp.tool(
+    name="generating Embedding url for company ",
+    description="Creating the embbeding url",
+    tags={"creation embbeding url", "embbeding url"},
+    meta={"version": "0.01", "author": "Girish"}
+)
+def embedded_signup_url(payload:EmbeddingURLGeneration)->dict:
+    """Creation of whatsp Business profile Creation"""
+    return create_generated_embedded_signup_url(payload)
     
     
 
@@ -61,8 +80,7 @@ def creating_project_business(payload:Project_creation)->dict:
 
 
 
-# text=create_business(payload)
-# print(text)
+
 
 
 

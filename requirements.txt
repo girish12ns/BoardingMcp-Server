@@ -1,3 +1,6 @@
 fastmcp
-fastapi>=0.104.0
+fastapi
 
+
+#image model
+google-generativeai

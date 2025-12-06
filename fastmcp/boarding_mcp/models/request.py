@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, EmailStr, HttpUrl, Field
 from typing import Optional
 
 #business_profile_creation
@@ -38,3 +38,75 @@ class Project_creation(BaseModel):
             }
         }
 
+
+
+
+
+
+class PhoneNumber(BaseModel):
+    code: int = Field(..., ge=1, le=999, description="Country calling code")
+    number: str = Field(..., pattern=r'^\d{7,15}$', description="Phone number without country code")
+
+class Address(BaseModel):
+    streetAddress1: str
+    streetAddress2: Optional[str] = None  # Consider adding this
+    city: str
+    state: str
+    zipPostal: str
+    country: str = Field(..., pattern=r'^[A-Z]{2}$', description="Two-letter country code")
+
+class Business(BaseModel):
+    name: str
+    email: EmailStr
+    phone: PhoneNumber
+    website: Optional[HttpUrl] = None
+    address: Address
+    timezone: str = Field(..., pattern=r'^UTC[+-]\d{2}:\d{2}$', description="Timezone in UTC offset format")
+
+class AssistantPhone(BaseModel):
+    displayName: str
+    category: str = Field(..., description="Category like ENTERTAIN, BUSINESS, etc.")
+    description: Optional[str] = ""
+
+class Setup(BaseModel):
+    business: Business
+    phone: AssistantPhone
+
+#Generating EmbeddingURLGeneration
+class EmbeddingURLGeneration(BaseModel):
+    businessId: str = Field(..., min_length=24, max_length=24, description="24-character business ID")
+    assistantId: str = Field(..., min_length=24, max_length=24, description="24-character assistant ID")
+    setup: Setup
+    
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "businessId": "63bbe4c2cd10ea720a532ez0",
+                "assistantId": "63bbe4c256be217200ad1b5b",
+                "setup": {
+                    "business": {
+                        "name": "Acme Inc.",
+                        "email": "johndoe@acme.com",
+                        "phone": {
+                            "code": 1,
+                            "number": "6505551234"
+                        },
+                        "website": "https://www.acme.com",
+                        "address": {
+                            "streetAddress1": "1 Acme Way",
+                            "city": "Acme Town",
+                            "state": "CA",
+                            "zipPostal": "94000",
+                            "country": "US"
+                        },
+                        "timezone": "UTC-08:00"
+                    },
+                    "phone": {
+                        "displayName": "Acme Inc.",
+                        "category": "ENTERTAIN",
+                        "description": ""
+                    }
+                }
+            }
+        }
+    }
