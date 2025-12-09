@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     PARTNER_ID:str
     AiSensy_API_Key:str
     BUSINESS_ID:str
+    BASE_URL:str
 
 
 
