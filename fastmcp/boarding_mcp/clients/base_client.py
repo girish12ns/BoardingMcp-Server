@@ -1,16 +1,16 @@
+"""
+This is base clients for AISENSY
+"""
 import aiohttp
-import logging
 from typing import Dict, Any, Optional
-from app.config.logging import logger
-from dataclasses import dataclass
-from app.config.setting import settings
+from dataclasses import dataclass, field
+
+from app import settings, logger
 
 
 @dataclass
 class AiSensyBaseClient:
     """Base client with shared functionality."""
-    
-    api_key: str
     timeout: int = 30
     BASE_URL: str = field(default_factory=lambda: settings.BASE_URL)
     _session: Optional[aiohttp.ClientSession] = field(default=None, init=False, repr=False)
@@ -23,9 +23,10 @@ class AiSensyBaseClient:
                 headers={
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "X-AiSensy-Partner-API-Key": self.api_key,
+                    "X-AiSensy-Partner-API-Key": settings.AiSensy_API_Key,
                 }
             )
+            logger.debug("New HTTP session created")
         return self._session
     
     async def close(self) -> None:
@@ -35,8 +36,17 @@ class AiSensyBaseClient:
             self._session = None
             logger.debug("Session closed")
     
+    async def __aenter__(self):
+        """Async context manager entry."""
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Async context manager exit."""
+        await self.close()
+    
     def _handle_error(self, status: int, error_text: str) -> Dict[str, Any]:
         """Handle error response."""
+        logger.warning(f"API error: {status} - {error_text}")
         error_map = {
             400: "Bad request",
             401: "Invalid API key",

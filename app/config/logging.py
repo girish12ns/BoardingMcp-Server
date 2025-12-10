@@ -1,15 +1,23 @@
 # logging_config.py
 import logging
 from logging.handlers import RotatingFileHandler
-import os
 from pathlib import Path
 from datetime import datetime
+
+# Flag to prevent multiple initializations
+_logging_initialized = False
+
 
 def setup_logging(log_level=logging.INFO):
     """
     Set up logging with daily folder structure.
     Structure: logs/2024-11-30/application.log
     """
+    global _logging_initialized
+    
+    # Skip if already initialized
+    if _logging_initialized:
+        return logging.getLogger()
     
     # Create base logs directory
     base_log_dir = Path("logs")
@@ -37,10 +45,9 @@ def setup_logging(log_level=logging.INFO):
     root_logger.addHandler(console_handler)
     
     # Application log file
-    app_log_file = daily_folder / "application.log"
     app_handler = RotatingFileHandler(
-        app_log_file,
-        maxBytes=10*1024*1024,  # 10 MB
+        daily_folder / "application.log",
+        maxBytes=10*1024*1024,
         backupCount=5,
         encoding='utf-8'
     )
@@ -49,10 +56,9 @@ def setup_logging(log_level=logging.INFO):
     root_logger.addHandler(app_handler)
     
     # Error log file
-    error_log_file = daily_folder / "errors.log"
     error_handler = RotatingFileHandler(
-        error_log_file,
-        maxBytes=10*1024*1024,  # 10 MB
+        daily_folder / "errors.log",
+        maxBytes=10*1024*1024,
         backupCount=3,
         encoding='utf-8'
     )
@@ -61,10 +67,9 @@ def setup_logging(log_level=logging.INFO):
     root_logger.addHandler(error_handler)
     
     # Debug log file
-    debug_log_file = daily_folder / "debug.log"
     debug_handler = RotatingFileHandler(
-        debug_log_file,
-        maxBytes=10*1024*1024,  # 10 MB
+        daily_folder / "debug.log",
+        maxBytes=10*1024*1024,
         backupCount=3,
         encoding='utf-8'
     )
@@ -72,9 +77,11 @@ def setup_logging(log_level=logging.INFO):
     debug_handler.setFormatter(log_format)
     root_logger.addHandler(debug_handler)
     
-    logging.info(f"Logging initialized - Directory: {daily_folder.absolute()}")
+    _logging_initialized = True
+    logging.debug(f"Logging initialized - Directory: {daily_folder.absolute()}")
     
     return root_logger
+
 
 # Initialize logging
 logger = setup_logging()
