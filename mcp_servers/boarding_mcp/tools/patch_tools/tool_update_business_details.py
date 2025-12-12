@@ -7,7 +7,7 @@ from typing import Dict, Any, Optional
 
 from .. import mcp
 from ...models import UpdateBusinessDetailsRequest
-from ...client_manager import get_aisensy_patch_client
+from ...clients import get_aisensy_patch_client
 from app import logger
 
 

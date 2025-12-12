@@ -7,7 +7,7 @@ from typing import Dict, Any
 
 from .. import mcp
 from ...models import RequestOtpRequest
-from ...client_manager import get_aisensy_post_client
+from ...clients import get_aisensy_post_client
 from app import logger
 
 
