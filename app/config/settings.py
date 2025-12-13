@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     AiSensy_API_Key:str
     BUSINESS_ID:str
     BASE_URL:str
+    Direct_BASE_URL:str
 
 
 
