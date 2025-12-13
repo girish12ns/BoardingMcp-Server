@@ -47,6 +47,50 @@ class AiSensyDirectApiGetClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
+
+    async def get_fb_verification_status(self) -> Dict[str, Any]:
+        """
+        Fetch fb_verification_status from the AiSensy Direct API.
+        
+        Endpoint: GET /fb_verification_status
+
+        Returns:
+            Dict[str, Any]: A dictionary containing the business info
+            as returned by the AiSensy API.
+        """
+        url = f"{self.BASE_URL}/fb-verification-status"
+        logger.debug(f"Fetching business info from: {url}")
+
+        try:
+            session = await self._get_session()
+            async with session.get(url) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    logger.info("Successfully fb-verification-status info")
+                    return {"success": True, "data": data}
+
+                error_text = await response.text()
+                return self._handle_error(response.status, error_text)
+
+        except aiohttp.ClientConnectorError:
+            logger.error("Network connection error")
+            return {"success": False, "error": "Network connection error"}
+        except aiohttp.ClientTimeout:
+            logger.error("Request timeout")
+            return {"success": False, "error": "Request timeout"}
+        except Exception as e:
+            logger.exception("Unexpected error")
+            return {"success": False, "error": str(e)}
+
+            
+
+
+
+
+
+
+
+
     # ==================== TEMPLATES ====================
 
     async def get_templates(self) -> Dict[str, Any]:

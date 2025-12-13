@@ -1,7 +1,6 @@
 """
-Pydantic models for MCP tool request validation for GET requests.
+Pydantic models for MCP tool request validation for Direct API GET requests.
 """
-from typing import Optional
 from pydantic import BaseModel, Field, field_validator
 
 
@@ -12,7 +11,7 @@ class TemplateIdRequest(BaseModel):
         ...,
         description="The unique template identifier",
         min_length=1,
-        examples=["template_abc123", "156167230836488"]
+        examples=["156167230836488", "template_abc123"]
     )
     
     @field_validator("template_id")

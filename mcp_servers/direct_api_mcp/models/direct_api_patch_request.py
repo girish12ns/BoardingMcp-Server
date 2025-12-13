@@ -1,12 +1,12 @@
 """
-Pydantic models for MCP tool request validation for PATCH requests.
+Pydantic models for MCP tool request validation for Direct API PATCH requests.
 """
 from typing import Optional, List
 from pydantic import BaseModel, Field, field_validator
 
 
-class UpdateProfilePictureRequest(BaseModel):
-    """Model for update profile picture request."""
+class UpdateBusinessProfilePictureRequest(BaseModel):
+    """Model for update business profile picture request."""
     
     whatsapp_display_image: str = Field(
         ...,
@@ -25,8 +25,8 @@ class UpdateProfilePictureRequest(BaseModel):
         return v
 
 
-class UpdateProfileRequest(BaseModel):
-    """Model for update profile request."""
+class UpdateBusinessProfileDetailsRequest(BaseModel):
+    """Model for update business profile details request."""
     
     whatsapp_about: Optional[str] = Field(
         default=None,
@@ -100,8 +100,8 @@ class UpdateQrCodeRequest(BaseModel):
         return v
 
 
-class UpdateFlowRequest(BaseModel):
-    """Model for update flow request."""
+class UpdateFlowMetadataRequest(BaseModel):
+    """Model for update flow metadata request."""
     
     flow_id: str = Field(
         ...,

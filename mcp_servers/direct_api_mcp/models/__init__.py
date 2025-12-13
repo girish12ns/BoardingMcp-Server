@@ -1,9 +1,9 @@
 """
-Pydantic models for MCP tool request validation.
+Pydantic models for MCP tool request validation for Direct API.
 """
 
 # GET Request Models
-from .get_request import (
+from .direct_api_get_request import (
     TemplateIdRequest,
     UploadSessionIdRequest,
     FlowIdRequest as GetFlowIdRequest,
@@ -11,45 +11,47 @@ from .get_request import (
 )
 
 # POST Request Models
-from .post_request import (
-    RegenerateTokenRequest,
+from .direct_api_post_request import (
+    RegenerateJwtBearerTokenRequest,
     WabaAnalyticsRequest,
-    HealthStatusRequest,
+    MessagingHealthStatusRequest,
     SendMessageRequest,
-    SendMarketingMessageRequest,
-    MarkMessageReadRequest,
-    CreateTemplateRequest,
+    SendMarketingLiteMessageRequest,
+    MarkMessageAsReadRequest,
+    SubmitWhatsappTemplateMessageRequest,
     EditTemplateRequest,
     CompareTemplateRequest,
     UploadMediaRequest,
-    GetMediaRequest,
-    CreateMediaSessionRequest,
+    RetrieveMediaByIdRequest,
+    CreateUploadSessionRequest,
     UploadMediaToSessionRequest,
     CreateCatalogRequest,
     ConnectCatalogRequest,
     CreateProductRequest,
-    UpdateWhatsappCommerceSettingsRequest,
-    CreateQrCodeRequest,
-    SetWhatsappBusinessEncryptionRequest,
+    ShowHideCatalogRequest,
+    CreateQrCodeAndShortLinkRequest,
+    SetBusinessPublicKeyRequest,
     CreateFlowRequest,
-    UploadFlowAssetsRequest,
+    UpdateFlowJsonRequest,
     FlowIdRequest as PostFlowIdRequest,
     CreatePaymentConfigurationRequest,
     GeneratePaymentConfigurationOAuthLinkRequest,
 )
 
 # DELETE Request Models
-from .delete_request import (
-    TemplateNameRequest,
-    FlowIdRequest as DeleteFlowIdRequest,
+from .direct_api_delete_request import (
+    DeleteWaTemplateByIdRequest,
+    DeleteWaTemplateByNameRequest,
+    DeleteMediaByIdRequest,
+    DeleteFlowRequest,
 )
 
 # PATCH Request Models
-from .patch_request import (
-    UpdateProfilePictureRequest,
-    UpdateProfileRequest,
+from .direct_api_patch_request import (
+    UpdateBusinessProfilePictureRequest,
+    UpdateBusinessProfileDetailsRequest,
     UpdateQrCodeRequest,
-    UpdateFlowRequest,
+    UpdateFlowMetadataRequest,
 )
 
 __all__ = [
@@ -59,36 +61,38 @@ __all__ = [
     "GetFlowIdRequest",
     "PaymentConfigurationNameRequest",
     # POST
-    "RegenerateTokenRequest",
+    "RegenerateJwtBearerTokenRequest",
     "WabaAnalyticsRequest",
-    "HealthStatusRequest",
+    "MessagingHealthStatusRequest",
     "SendMessageRequest",
-    "SendMarketingMessageRequest",
-    "MarkMessageReadRequest",
-    "CreateTemplateRequest",
+    "SendMarketingLiteMessageRequest",
+    "MarkMessageAsReadRequest",
+    "SubmitWhatsappTemplateMessageRequest",
     "EditTemplateRequest",
     "CompareTemplateRequest",
     "UploadMediaRequest",
-    "GetMediaRequest",
-    "CreateMediaSessionRequest",
+    "RetrieveMediaByIdRequest",
+    "CreateUploadSessionRequest",
     "UploadMediaToSessionRequest",
     "CreateCatalogRequest",
     "ConnectCatalogRequest",
     "CreateProductRequest",
-    "UpdateWhatsappCommerceSettingsRequest",
-    "CreateQrCodeRequest",
-    "SetWhatsappBusinessEncryptionRequest",
+    "ShowHideCatalogRequest",
+    "CreateQrCodeAndShortLinkRequest",
+    "SetBusinessPublicKeyRequest",
     "CreateFlowRequest",
-    "UploadFlowAssetsRequest",
+    "UpdateFlowJsonRequest",
     "PostFlowIdRequest",
     "CreatePaymentConfigurationRequest",
     "GeneratePaymentConfigurationOAuthLinkRequest",
     # DELETE
-    "TemplateNameRequest",
-    "DeleteFlowIdRequest",
+    "DeleteWaTemplateByIdRequest",
+    "DeleteWaTemplateByNameRequest",
+    "DeleteMediaByIdRequest",
+    "DeleteFlowRequest",
     # PATCH
-    "UpdateProfilePictureRequest",
-    "UpdateProfileRequest",
+    "UpdateBusinessProfilePictureRequest",
+    "UpdateBusinessProfileDetailsRequest",
     "UpdateQrCodeRequest",
-    "UpdateFlowRequest",
+    "UpdateFlowMetadataRequest",
 ]

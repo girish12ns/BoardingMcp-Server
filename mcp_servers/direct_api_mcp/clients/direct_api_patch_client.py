@@ -4,18 +4,20 @@ PATCH client for AiSensy Direct APIs
 from typing import Dict, Any, Optional, List
 import aiohttp
 
-from .base_client import AiSensyDirectApiClient
+from .direct_api_base_client import AiSensyDirectApiClient
 from app import logger
 
 
 class AiSensyDirectApiPatchClient(AiSensyDirectApiClient):
     """Client for all PATCH operations on Direct APIs."""
 
-    # ==================== 1. UPDATE PROFILE PICTURE ====================
+    # ==================== 1. UPDATE BUSINESS PROFILE PICTURE ====================
 
-    async def update_profile_picture(self, whatsapp_display_image: str) -> Dict[str, Any]:
+    async def update_business_profile_picture(self, whatsapp_display_image: str) -> Dict[str, Any]:
         """
-        Update WhatsApp profile picture via the AiSensy Direct API.
+        Update Business Profile Picture.
+        
+        Endpoint: PATCH /update-profile-picture
 
         Args:
             whatsapp_display_image: URL of the new profile picture.
@@ -33,14 +35,14 @@ class AiSensyDirectApiPatchClient(AiSensyDirectApiClient):
 
         url = f"{self.BASE_URL}/update-profile-picture"
         payload = {"whatsAppDisplayImage": whatsapp_display_image}
-        logger.debug(f"Updating profile picture at: {url}")
+        logger.debug(f"Updating business profile picture at: {url}")
 
         try:
             session = await self._get_session()
             async with session.patch(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info("Successfully updated profile picture")
+                    logger.info("Successfully updated business profile picture")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -56,9 +58,9 @@ class AiSensyDirectApiPatchClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 2. UPDATE PROFILE ====================
+    # ==================== 2. UPDATE BUSINESS PROFILE DETAILS ====================
 
-    async def update_profile(
+    async def update_business_profile_details(
         self,
         whatsapp_about: Optional[str] = None,
         address: Optional[str] = None,
@@ -69,7 +71,9 @@ class AiSensyDirectApiPatchClient(AiSensyDirectApiClient):
         whatsapp_display_image: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Update WhatsApp business profile via the AiSensy Direct API.
+        Update Business Profile Details.
+        
+        Endpoint: PATCH /update-profile
 
         Args:
             whatsapp_about: WhatsApp about/status text.
@@ -109,14 +113,14 @@ class AiSensyDirectApiPatchClient(AiSensyDirectApiClient):
                 "error": "At least one field is required to update"
             }
 
-        logger.debug(f"Updating profile at: {url}")
+        logger.debug(f"Updating business profile details at: {url}")
 
         try:
             session = await self._get_session()
             async with session.patch(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info("Successfully updated profile")
+                    logger.info("Successfully updated business profile details")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -140,7 +144,9 @@ class AiSensyDirectApiPatchClient(AiSensyDirectApiClient):
         prefilled_message: str
     ) -> Dict[str, Any]:
         """
-        Update a QR code via the AiSensy Direct API.
+        Update QR Code.
+        
+        Endpoint: PATCH /qr-codes
 
         Args:
             qr_code_id: The QR code ID to update.
@@ -185,16 +191,18 @@ class AiSensyDirectApiPatchClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 4. UPDATE FLOW ====================
+    # ==================== 4. UPDATING FLOW'S METADATA ====================
 
-    async def update_flow(
+    async def update_flow_metadata(
         self,
         flow_id: str,
         name: Optional[str] = None,
         categories: Optional[List[str]] = None
     ) -> Dict[str, Any]:
         """
-        Update a flow via the AiSensy Direct API.
+        Updating Flow's Metadata.
+        
+        Endpoint: PATCH /flows/{flowId}
 
         Args:
             flow_id: The flow ID to update.
@@ -227,14 +235,14 @@ class AiSensyDirectApiPatchClient(AiSensyDirectApiClient):
                 "error": "At least one field (name or categories) is required to update"
             }
 
-        logger.debug(f"Updating flow: {flow_id}")
+        logger.debug(f"Updating flow metadata: {flow_id}")
 
         try:
             session = await self._get_session()
             async with session.patch(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info(f"Successfully updated flow: {flow_id}")
+                    logger.info(f"Successfully updated flow metadata: {flow_id}")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()

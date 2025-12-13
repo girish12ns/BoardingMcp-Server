@@ -1,12 +1,12 @@
 """
-Pydantic models for MCP tool request validation for POST requests.
+Pydantic models for MCP tool request validation for Direct API POST requests.
 """
 from typing import Optional, List, Dict, Any
 from pydantic import BaseModel, Field, field_validator
 
 
-class RegenerateTokenRequest(BaseModel):
-    """Model for regenerate token request."""
+class RegenerateJwtBearerTokenRequest(BaseModel):
+    """Model for regenerate JWT bearer token request."""
     
     direct_api: bool = Field(
         default=True,
@@ -34,7 +34,7 @@ class WabaAnalyticsRequest(BaseModel):
     )
     granularity: str = Field(
         ...,
-        description="Data granularity",
+        description="Data granularity (DAY, MONTH, HOUR)",
         examples=["DAY", "MONTH"]
     )
     country_codes: Optional[List[str]] = Field(
@@ -54,8 +54,8 @@ class WabaAnalyticsRequest(BaseModel):
         return v
 
 
-class HealthStatusRequest(BaseModel):
-    """Model for health status request."""
+class MessagingHealthStatusRequest(BaseModel):
+    """Model for messaging health status request."""
     
     node_id: str = Field(
         ...,
@@ -108,15 +108,24 @@ class SendMessageRequest(BaseModel):
         if not v:
             raise ValueError("to cannot be empty or whitespace")
         return v
+    
+    @field_validator("text_body")
+    @classmethod
+    def validate_text_body(cls, v: str) -> str:
+        """Validate and sanitize text_body."""
+        v = v.strip()
+        if not v:
+            raise ValueError("text_body cannot be empty or whitespace")
+        return v
 
 
-class SendMarketingMessageRequest(SendMessageRequest):
-    """Model for send marketing message request (same as SendMessageRequest)."""
+class SendMarketingLiteMessageRequest(SendMessageRequest):
+    """Model for send marketing lite message request (same as SendMessageRequest)."""
     pass
 
 
-class MarkMessageReadRequest(BaseModel):
-    """Model for mark message read request."""
+class MarkMessageAsReadRequest(BaseModel):
+    """Model for mark message as read request."""
     
     message_id: str = Field(
         ...,
@@ -135,8 +144,8 @@ class MarkMessageReadRequest(BaseModel):
         return v
 
 
-class CreateTemplateRequest(BaseModel):
-    """Model for create template request."""
+class SubmitWhatsappTemplateMessageRequest(BaseModel):
+    """Model for submit WhatsApp template message request."""
     
     name: str = Field(
         ...,
@@ -146,7 +155,7 @@ class CreateTemplateRequest(BaseModel):
     )
     category: str = Field(
         ...,
-        description="Template category",
+        description="Template category (MARKETING, UTILITY, AUTHENTICATION)",
         examples=["MARKETING", "UTILITY"]
     )
     language: str = Field(
@@ -190,7 +199,7 @@ class EditTemplateRequest(BaseModel):
     )
     category: str = Field(
         ...,
-        description="Template category",
+        description="Template category (MARKETING, UTILITY, AUTHENTICATION)",
         examples=["MARKETING", "UTILITY"]
     )
     components: List[Dict[str, Any]] = Field(
@@ -232,6 +241,15 @@ class CompareTemplateRequest(BaseModel):
         description="End timestamp (Unix epoch)",
         examples=[1691747511]
     )
+    
+    @field_validator("template_id")
+    @classmethod
+    def validate_template_id(cls, v: str) -> str:
+        """Validate and sanitize template_id."""
+        v = v.strip()
+        if not v:
+            raise ValueError("template_id cannot be empty or whitespace")
+        return v
 
 
 class UploadMediaRequest(BaseModel):
@@ -254,8 +272,8 @@ class UploadMediaRequest(BaseModel):
         return v
 
 
-class GetMediaRequest(BaseModel):
-    """Model for get media request."""
+class RetrieveMediaByIdRequest(BaseModel):
+    """Model for retrieve media by ID request."""
     
     media_id: str = Field(
         ...,
@@ -274,8 +292,8 @@ class GetMediaRequest(BaseModel):
         return v
 
 
-class CreateMediaSessionRequest(BaseModel):
-    """Model for create media session request."""
+class CreateUploadSessionRequest(BaseModel):
+    """Model for create upload session request."""
     
     file_name: str = Field(
         ...,
@@ -324,6 +342,15 @@ class UploadMediaToSessionRequest(BaseModel):
         description="Byte offset for resumable uploads",
         examples=[0]
     )
+    
+    @field_validator("upload_session_id", "file_path")
+    @classmethod
+    def validate_required_strings(cls, v: str) -> str:
+        """Validate and sanitize required string fields."""
+        v = v.strip()
+        if not v:
+            raise ValueError("Field cannot be empty or whitespace")
+        return v
 
 
 class CreateCatalogRequest(BaseModel):
@@ -366,6 +393,15 @@ class CreateCatalogRequest(BaseModel):
         default=None,
         description="Display settings for dynamic ads"
     )
+    
+    @field_validator("name")
+    @classmethod
+    def validate_name(cls, v: str) -> str:
+        """Validate and sanitize catalog name."""
+        v = v.strip()
+        if not v:
+            raise ValueError("name cannot be empty or whitespace")
+        return v
 
 
 class ConnectCatalogRequest(BaseModel):
@@ -456,8 +492,8 @@ class CreateProductRequest(BaseModel):
     )
 
 
-class UpdateWhatsappCommerceSettingsRequest(BaseModel):
-    """Model for update WhatsApp commerce settings request."""
+class ShowHideCatalogRequest(BaseModel):
+    """Model for show/hide catalog request."""
     
     enable_catalog: bool = Field(
         ...,
@@ -469,8 +505,8 @@ class UpdateWhatsappCommerceSettingsRequest(BaseModel):
     )
 
 
-class CreateQrCodeRequest(BaseModel):
-    """Model for create QR code request."""
+class CreateQrCodeAndShortLinkRequest(BaseModel):
+    """Model for create QR code and short link request."""
     
     prefilled_message: str = Field(
         ...,
@@ -480,7 +516,7 @@ class CreateQrCodeRequest(BaseModel):
     )
     generate_qr_image: str = Field(
         default="SVG",
-        description="QR image format",
+        description="QR image format (SVG, PNG)",
         examples=["SVG", "PNG"]
     )
     
@@ -494,8 +530,8 @@ class CreateQrCodeRequest(BaseModel):
         return v
 
 
-class SetWhatsappBusinessEncryptionRequest(BaseModel):
-    """Model for set WhatsApp business encryption request."""
+class SetBusinessPublicKeyRequest(BaseModel):
+    """Model for set business public key request."""
     
     business_public_key: str = Field(
         ...,
@@ -538,8 +574,8 @@ class CreateFlowRequest(BaseModel):
         return v
 
 
-class UploadFlowAssetsRequest(BaseModel):
-    """Model for upload flow assets request."""
+class UpdateFlowJsonRequest(BaseModel):
+    """Model for update flow JSON request."""
     
     flow_id: str = Field(
         ...,
@@ -553,6 +589,15 @@ class UploadFlowAssetsRequest(BaseModel):
         min_length=1,
         examples=["/path/to/asset.json"]
     )
+    
+    @field_validator("flow_id", "file_path")
+    @classmethod
+    def validate_required_strings(cls, v: str) -> str:
+        """Validate and sanitize required string fields."""
+        v = v.strip()
+        if not v:
+            raise ValueError("Field cannot be empty or whitespace")
+        return v
 
 
 class FlowIdRequest(BaseModel):
@@ -605,6 +650,15 @@ class CreatePaymentConfigurationRequest(BaseModel):
         min_length=1,
         examples=["https://test-redirect-url.com"]
     )
+    
+    @field_validator("configuration_name", "redirect_url")
+    @classmethod
+    def validate_required_strings(cls, v: str) -> str:
+        """Validate and sanitize required string fields."""
+        v = v.strip()
+        if not v:
+            raise ValueError("Field cannot be empty or whitespace")
+        return v
 
 
 class GeneratePaymentConfigurationOAuthLinkRequest(BaseModel):
@@ -622,3 +676,12 @@ class GeneratePaymentConfigurationOAuthLinkRequest(BaseModel):
         min_length=1,
         examples=["https://test-redirect-url.com"]
     )
+    
+    @field_validator("configuration_name", "redirect_url")
+    @classmethod
+    def validate_required_strings(cls, v: str) -> str:
+        """Validate and sanitize required string fields."""
+        v = v.strip()
+        if not v:
+            raise ValueError("Field cannot be empty or whitespace")
+        return v

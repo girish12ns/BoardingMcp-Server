@@ -1,7 +1,7 @@
 """
-MCP Tool: Get Business Info
+MCP Tool: Get fb verification status
 
-Fetches WABA business info from the AiSensy Direct API.
+Fetches fb verification status info from the AiSensy Direct API.
 """
 from typing import Dict, Any
 
@@ -11,15 +11,13 @@ from app import logger
 
 
 @mcp.tool(
-    name="get_business_info",
+    name="fb_verification_status",
     description=(
-        "Fetches WhatsApp Business Account (WABA) business info from the AiSensy Direct API. "
-        "Returns comprehensive business details including account status, verification status, "
-        "and other WABA-related information associated with the authenticated account."
+        "Fetches fb verification status info from the AiSensy Direct API. "
+        "Returns verifcation status"
     ),
     tags={
-        "waba",
-        "business",
+        "fb verifcation status",
         "info",
         "get",
         "direct-api",
@@ -31,9 +29,9 @@ from app import logger
         "category": "WABA Management"
     }
 )
-async def get_business_info() -> Dict[str, Any]:
+async def get_fb_verification_status() -> Dict[str, Any]:
     """
-    Fetch WABA business info.
+   get fb verification status
     
     Returns:
         Dict containing:
@@ -43,10 +41,10 @@ async def get_business_info() -> Dict[str, Any]:
     """
     try:
         async with get_direct_api_get_client() as client:
-            response = await client.get_business_info()
+            response = await client.get_fb_verification_status()
             
             if response.get("success"):
-                logger.info("Successfully retrieved business info")
+                logger.info("Successfully get_fb_verification_status info")
             else:
                 logger.warning(
                     f"Failed to retrieve business info: {response.get('error')}"
@@ -55,7 +53,7 @@ async def get_business_info() -> Dict[str, Any]:
             return response
         
     except Exception as e:
-        error_msg = f"Unexpected error fetching business info: {str(e)}"
+        error_msg = f"Unexpected error fetching fb verification status: {str(e)}"
         logger.exception(error_msg)
         return {
             "success": False,

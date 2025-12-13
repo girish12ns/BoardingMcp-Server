@@ -4,32 +4,45 @@ DELETE client for AiSensy Direct APIs
 from typing import Dict, Any
 import aiohttp
 
-from .base_client import AiSensyDirectApiClient
+from .direct_api_base_client import AiSensyDirectApiClient
 from app import logger
 
 
 class AiSensyDirectApiDeleteClient(AiSensyDirectApiClient):
     """Client for all DELETE operations on Direct APIs."""
 
-    # ==================== 1. DELETE ALL TEMPLATES ====================
+    # ==================== 1. DELETE WA TEMPLATE BY ID ====================
 
-    async def delete_all_templates(self) -> Dict[str, Any]:
+    async def delete_wa_template_by_id(self, template_id: str) -> Dict[str, Any]:
         """
-        Delete all WhatsApp templates via the AiSensy Direct API.
+        Delete WA Template by ID.
+        
+        Endpoint: DELETE /wa_template
+
+        Args:
+            template_id: The template ID to delete.
 
         Returns:
             Dict[str, Any]: A dictionary containing the response
             as returned by the AiSensy API.
         """
+        if not template_id:
+            logger.error("Missing template_id parameter")
+            return {
+                "success": False,
+                "error": "Missing required field: template_id"
+            }
+
         url = f"{self.BASE_URL}/wa_template"
-        logger.debug(f"Deleting all templates at: {url}")
+        params = {"templateId": template_id}
+        logger.debug(f"Deleting WA template by ID: {template_id}")
 
         try:
             session = await self._get_session()
-            async with session.delete(url) as response:
+            async with session.delete(url, params=params) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info("Successfully deleted all templates")
+                    logger.info(f"Successfully deleted WA template by ID: {template_id}")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -45,11 +58,13 @@ class AiSensyDirectApiDeleteClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 2. DELETE TEMPLATE BY NAME ====================
+    # ==================== 2. DELETE WA TEMPLATE BY NAME ====================
 
-    async def delete_template_by_name(self, template_name: str) -> Dict[str, Any]:
+    async def delete_wa_template_by_name(self, template_name: str) -> Dict[str, Any]:
         """
-        Delete a specific WhatsApp template by name via the AiSensy Direct API.
+        Delete WA Template by Name.
+        
+        Endpoint: DELETE /wa_template/{template_name}
 
         Args:
             template_name: The template name to delete.
@@ -66,14 +81,14 @@ class AiSensyDirectApiDeleteClient(AiSensyDirectApiClient):
             }
 
         url = f"{self.BASE_URL}/wa_template/{template_name}"
-        logger.debug(f"Deleting template: {template_name}")
+        logger.debug(f"Deleting WA template by name: {template_name}")
 
         try:
             session = await self._get_session()
             async with session.delete(url) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info(f"Successfully deleted template: {template_name}")
+                    logger.info(f"Successfully deleted WA template by name: {template_name}")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -89,25 +104,38 @@ class AiSensyDirectApiDeleteClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 3. DELETE MEDIA ====================
+    # ==================== 3. DELETE MEDIA BY ID ====================
 
-    async def delete_media(self) -> Dict[str, Any]:
+    async def delete_media_by_id(self, media_id: str) -> Dict[str, Any]:
         """
-        Delete media via the AiSensy Direct API.
+        Delete Media by ID.
+        
+        Endpoint: DELETE /media
+
+        Args:
+            media_id: The media ID to delete.
 
         Returns:
             Dict[str, Any]: A dictionary containing the response
             as returned by the AiSensy API.
         """
+        if not media_id:
+            logger.error("Missing media_id parameter")
+            return {
+                "success": False,
+                "error": "Missing required field: media_id"
+            }
+
         url = f"{self.BASE_URL}/media"
-        logger.debug(f"Deleting media at: {url}")
+        params = {"mediaId": media_id}
+        logger.debug(f"Deleting media by ID: {media_id}")
 
         try:
             session = await self._get_session()
-            async with session.delete(url) as response:
+            async with session.delete(url, params=params) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info("Successfully deleted media")
+                    logger.info(f"Successfully deleted media by ID: {media_id}")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -127,7 +155,9 @@ class AiSensyDirectApiDeleteClient(AiSensyDirectApiClient):
 
     async def disconnect_catalog(self) -> Dict[str, Any]:
         """
-        Disconnect catalog via the AiSensy Direct API.
+        Disconnect Catalog.
+        
+        Endpoint: DELETE /disconnect-catalog
 
         Returns:
             Dict[str, Any]: A dictionary containing the response
@@ -157,11 +187,13 @@ class AiSensyDirectApiDeleteClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 5. DELETE FLOW ====================
+    # ==================== 5. DELETE A FLOW ====================
 
     async def delete_flow(self, flow_id: str) -> Dict[str, Any]:
         """
-        Delete a flow via the AiSensy Direct API.
+        Delete a Flow.
+        
+        Endpoint: DELETE /flows/{flowId}
 
         Args:
             flow_id: The flow ID to delete.

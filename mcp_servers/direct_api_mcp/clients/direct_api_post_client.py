@@ -4,18 +4,20 @@ POST client for AiSensy Direct APIs
 from typing import Dict, Any, Optional, List
 import aiohttp
 
-from .base_client import AiSensyDirectApiClient
+from .direct_api_base_client import AiSensyDirectApiClient
 from app import logger
 
 
 class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
     """Client for all POST operations on Direct APIs."""
 
-    # ==================== 1. USERS ====================
+    # ==================== 1. AUTHENTICATION ====================
 
-    async def regenerate_token(self, direct_api: bool = True) -> Dict[str, Any]:
+    async def regenerate_jwt_bearer_token(self, direct_api: bool = True) -> Dict[str, Any]:
         """
-        Regenerate API token from the AiSensy Direct API.
+        Regenerate JWT Bearer Token to Access Direct-APIs.
+        
+        Endpoint: POST /users/regenrate-token
 
         Args:
             direct_api: Whether to use direct API. Defaults to True.
@@ -26,14 +28,14 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         """
         url = f"{self.BASE_URL}/users/regenrate-token"
         payload = {"direct_api": direct_api}
-        logger.debug(f"Regenerating token at: {url}")
+        logger.debug(f"Regenerating JWT bearer token at: {url}")
 
         try:
             session = await self._get_session()
             async with session.post(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info("Successfully regenerated token")
+                    logger.info("Successfully regenerated JWT bearer token")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -60,7 +62,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         country_codes: Optional[List[str]] = None
     ) -> Dict[str, Any]:
         """
-        Fetch WABA analytics from the AiSensy Direct API.
+        Get WABA Analytics.
+        
+        Endpoint: POST /waba-analytics
 
         Args:
             fields: Analytics fields to fetch (e.g., "analytics").
@@ -108,9 +112,11 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
 
     # ==================== 3. HEALTH STATUS ====================
 
-    async def get_health_status(self, node_id: str) -> Dict[str, Any]:
+    async def get_messaging_health_status(self, node_id: str) -> Dict[str, Any]:
         """
-        Fetch health status from the AiSensy Direct API.
+        Get Messaging Health Status.
+        
+        Endpoint: POST /health-status
 
         Args:
             node_id: The node ID to check health status for.
@@ -128,14 +134,14 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
 
         url = f"{self.BASE_URL}/health-status"
         payload = {"nodeId": node_id}
-        logger.debug(f"Fetching health status from: {url}")
+        logger.debug(f"Fetching messaging health status from: {url}")
 
         try:
             session = await self._get_session()
             async with session.post(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info("Successfully fetched health status")
+                    logger.info("Successfully fetched messaging health status")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -151,7 +157,7 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 4. MESSAGES ====================
+    # ==================== 4. SEND MESSAGE ====================
 
     async def send_message(
         self,
@@ -161,7 +167,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         recipient_type: str = "individual"
     ) -> Dict[str, Any]:
         """
-        Send a message via the AiSensy Direct API.
+        Send Message.
+        
+        Endpoint: POST /messages
 
         Args:
             to: Recipient phone number (e.g., "917089379345").
@@ -212,9 +220,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 5. MARKETING MESSAGES ====================
+    # ==================== 5. SEND MARKETING LITE MESSAGE ====================
 
-    async def send_marketing_message(
+    async def send_marketing_lite_message(
         self,
         to: str,
         message_type: str,
@@ -222,7 +230,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         recipient_type: str = "individual"
     ) -> Dict[str, Any]:
         """
-        Send a marketing message via the AiSensy Direct API.
+        Send Marketing Lite Message.
+        
+        Endpoint: POST /marketing_messages
 
         Args:
             to: Recipient phone number (e.g., "917089379345").
@@ -250,14 +260,14 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
                 "body": text_body
             }
         }
-        logger.debug(f"Sending marketing message to: {to}")
+        logger.debug(f"Sending marketing lite message to: {to}")
 
         try:
             session = await self._get_session()
             async with session.post(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info(f"Successfully sent marketing message to: {to}")
+                    logger.info(f"Successfully sent marketing lite message to: {to}")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -273,11 +283,13 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 6. MARK READ ====================
+    # ==================== 6. MARK MESSAGE AS READ ====================
 
-    async def mark_message_read(self, message_id: str) -> Dict[str, Any]:
+    async def mark_message_as_read(self, message_id: str) -> Dict[str, Any]:
         """
-        Mark a message as read via the AiSensy Direct API.
+        Mark message as read.
+        
+        Endpoint: POST /mark-read
 
         Args:
             message_id: The message ID to mark as read.
@@ -318,9 +330,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 7. CREATE TEMPLATE ====================
+    # ==================== 7. SUBMIT WHATSAPP TEMPLATE MESSAGE ====================
 
-    async def create_template(
+    async def submit_whatsapp_template_message(
         self,
         name: str,
         category: str,
@@ -328,7 +340,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         components: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
         """
-        Create a WhatsApp template via the AiSensy Direct API.
+        Submit WhatsApp Template Message.
+        
+        Endpoint: POST /wa_template
 
         Args:
             name: Template name.
@@ -354,14 +368,14 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             "language": language,
             "components": components
         }
-        logger.debug(f"Creating template: {name}")
+        logger.debug(f"Submitting WhatsApp template: {name}")
 
         try:
             session = await self._get_session()
             async with session.post(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info(f"Successfully created template: {name}")
+                    logger.info(f"Successfully submitted WhatsApp template: {name}")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -386,7 +400,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         components: List[Dict[str, Any]]
     ) -> Dict[str, Any]:
         """
-        Edit a WhatsApp template via the AiSensy Direct API.
+        Edit Template.
+        
+        Endpoint: POST /edit-template/{templateId}
 
         Args:
             template_id: The template ID to edit.
@@ -442,7 +458,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         end: int
     ) -> Dict[str, Any]:
         """
-        Compare templates via the AiSensy Direct API.
+        Compare Template.
+        
+        Endpoint: POST /compare-template/{templateId}
 
         Args:
             template_id: The primary template ID for comparison.
@@ -494,7 +512,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
 
     async def upload_media(self, file_path: str) -> Dict[str, Any]:
         """
-        Upload media via the AiSensy Direct API (multipart/form-data).
+        Upload Media.
+        
+        Endpoint: POST /media (multipart/form-data)
 
         Args:
             file_path: Path to the file to upload.
@@ -540,11 +560,13 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 11. GET MEDIA ====================
+    # ==================== 11. RETRIEVE MEDIA BY ID ====================
 
-    async def get_media(self, media_id: str) -> Dict[str, Any]:
+    async def retrieve_media_by_id(self, media_id: str) -> Dict[str, Any]:
         """
-        Get media by ID via the AiSensy Direct API.
+        Retrieve Media by ID.
+        
+        Endpoint: POST /get-media
 
         Args:
             media_id: The media ID to fetch.
@@ -562,14 +584,14 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
 
         url = f"{self.BASE_URL}/get-media"
         payload = {"id": media_id}
-        logger.debug(f"Fetching media: {media_id}")
+        logger.debug(f"Retrieving media: {media_id}")
 
         try:
             session = await self._get_session()
             async with session.post(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info(f"Successfully fetched media: {media_id}")
+                    logger.info(f"Successfully retrieved media: {media_id}")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -585,16 +607,18 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 12. CREATE MEDIA SESSION ====================
+    # ==================== 12. CREATE UPLOAD SESSION ====================
 
-    async def create_media_session(
+    async def create_upload_session(
         self,
         file_name: str,
         file_length: str,
         file_type: str
     ) -> Dict[str, Any]:
         """
-        Create a media upload session via the AiSensy Direct API.
+        Create Upload Session.
+        
+        Endpoint: POST /media/session
 
         Args:
             file_name: Name of the file to upload.
@@ -618,14 +642,14 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             "fileLength": file_length,
             "fileType": file_type
         }
-        logger.debug(f"Creating media session for: {file_name}")
+        logger.debug(f"Creating upload session for: {file_name}")
 
         try:
             session = await self._get_session()
             async with session.post(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info(f"Successfully created media session for: {file_name}")
+                    logger.info(f"Successfully created upload session for: {file_name}")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -650,7 +674,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         file_offset: int = 0
     ) -> Dict[str, Any]:
         """
-        Upload media to an existing session via the AiSensy Direct API.
+        Upload Media to Session.
+        
+        Endpoint: POST /media/session/{uploadSessionId} (multipart/form-data)
 
         Args:
             upload_session_id: The upload session ID.
@@ -713,7 +739,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         da_display_settings: Optional[Dict[str, Any]] = None
     ) -> Dict[str, Any]:
         """
-        Create a catalog via the AiSensy Direct API.
+        Create Catalog.
+        
+        Endpoint: POST /catalog
 
         Args:
             name: Catalog name.
@@ -778,7 +806,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
 
     async def connect_catalog(self, catalog_id: str) -> Dict[str, Any]:
         """
-        Connect a catalog via the AiSensy Direct API.
+        Connect Catalog.
+        
+        Endpoint: POST /connect-catalog
 
         Args:
             catalog_id: The catalog ID to connect.
@@ -838,7 +868,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         sale_price_end_date: Optional[str] = None
     ) -> Dict[str, Any]:
         """
-        Create a product via the AiSensy Direct API.
+        Create Product.
+        
+        Endpoint: POST /product
 
         Args:
             catalog_id: The catalog ID to add product to.
@@ -912,15 +944,17 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 17. UPDATE WHATSAPP COMMERCE SETTINGS ====================
+    # ==================== 17. SHOW / HIDE CATALOG ====================
 
-    async def update_whatsapp_commerce_settings(
+    async def show_hide_catalog(
         self,
         enable_catalog: bool,
         enable_cart: bool
     ) -> Dict[str, Any]:
         """
-        Update WhatsApp commerce settings via the AiSensy Direct API.
+        Show / Hide Catalog (Update WhatsApp Commerce Settings).
+        
+        Endpoint: POST /whatsapp-commerce-settings
 
         Args:
             enable_catalog: Whether to enable catalog.
@@ -935,7 +969,7 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             "enableCatalog": enable_catalog,
             "enableCart": enable_cart
         }
-        logger.debug("Updating WhatsApp commerce settings")
+        logger.debug("Updating WhatsApp commerce settings (show/hide catalog)")
 
         try:
             session = await self._get_session()
@@ -958,15 +992,17 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 18. CREATE QR CODE ====================
+    # ==================== 18. CREATE QR CODE & SHORT LINK ====================
 
-    async def create_qr_code(
+    async def create_qr_code_and_short_link(
         self,
         prefilled_message: str,
         generate_qr_image: str = "SVG"
     ) -> Dict[str, Any]:
         """
-        Create a QR code via the AiSensy Direct API.
+        Create QR Code & Short Link.
+        
+        Endpoint: POST /qr-codes
 
         Args:
             prefilled_message: The prefilled message for the QR code.
@@ -988,14 +1024,14 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             "prefilledMessage": prefilled_message,
             "generateQrImage": generate_qr_image
         }
-        logger.debug("Creating QR code")
+        logger.debug("Creating QR code and short link")
 
         try:
             session = await self._get_session()
             async with session.post(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info("Successfully created QR code")
+                    logger.info("Successfully created QR code and short link")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -1011,11 +1047,13 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 19. SET WHATSAPP BUSINESS ENCRYPTION ====================
+    # ==================== 19. SET BUSINESS PUBLIC KEY ====================
 
-    async def set_whatsapp_business_encryption(self, business_public_key: str) -> Dict[str, Any]:
+    async def set_business_public_key(self, business_public_key: str) -> Dict[str, Any]:
         """
-        Set WhatsApp business encryption via the AiSensy Direct API.
+        Set Business Public Key.
+        
+        Endpoint: POST /whatsapp-business-encryption
 
         Args:
             business_public_key: The business public key (PEM format).
@@ -1033,14 +1071,14 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
 
         url = f"{self.BASE_URL}/whatsapp-business-encryption"
         payload = {"businessPublicKey": business_public_key}
-        logger.debug("Setting WhatsApp business encryption")
+        logger.debug("Setting business public key")
 
         try:
             session = await self._get_session()
             async with session.post(url, json=payload) as response:
                 if response.status == 200:
                     data = await response.json()
-                    logger.info("Successfully set WhatsApp business encryption")
+                    logger.info("Successfully set business public key")
                     return {"success": True, "data": data}
 
                 error_text = await response.text()
@@ -1056,7 +1094,7 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 20. CREATE FLOW ====================
+    # ==================== 20. CREATING A FLOW ====================
 
     async def create_flow(
         self,
@@ -1064,7 +1102,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         categories: List[str]
     ) -> Dict[str, Any]:
         """
-        Create a flow via the AiSensy Direct API.
+        Creating a Flow.
+        
+        Endpoint: POST /flows
 
         Args:
             name: Flow name.
@@ -1109,11 +1149,13 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             logger.exception("Unexpected error")
             return {"success": False, "error": str(e)}
 
-    # ==================== 21. UPLOAD FLOW ASSETS ====================
+    # ==================== 21. UPDATING A FLOW'S FLOW JSON ====================
 
-    async def upload_flow_assets(self, flow_id: str, file_path: str) -> Dict[str, Any]:
+    async def update_flow_json(self, flow_id: str, file_path: str) -> Dict[str, Any]:
         """
-        Upload assets to a flow via the AiSensy Direct API.
+        Updating a Flow's Flow JSON (Upload flow assets).
+        
+        Endpoint: POST /flows/{flowId}/assets (multipart/form-data)
 
         Args:
             flow_id: The flow ID to upload assets to.
@@ -1131,7 +1173,7 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             }
 
         url = f"{self.BASE_URL}/flows/{flow_id}/assets"
-        logger.debug(f"Uploading assets to flow: {flow_id}")
+        logger.debug(f"Updating flow JSON for: {flow_id}")
 
         try:
             session = await self._get_session()
@@ -1141,7 +1183,7 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
             async with session.post(url, data=data) as response:
                 if response.status == 200:
                     resp_data = await response.json()
-                    logger.info(f"Successfully uploaded assets to flow: {flow_id}")
+                    logger.info(f"Successfully updated flow JSON for: {flow_id}")
                     return {"success": True, "data": resp_data}
 
                 error_text = await response.text()
@@ -1164,7 +1206,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
 
     async def publish_flow(self, flow_id: str) -> Dict[str, Any]:
         """
-        Publish a flow via the AiSensy Direct API.
+        Publish Flow.
+        
+        Endpoint: POST /flows/{flowId}/publish
 
         Args:
             flow_id: The flow ID to publish.
@@ -1208,7 +1252,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
 
     async def deprecate_flow(self, flow_id: str) -> Dict[str, Any]:
         """
-        Deprecate a flow via the AiSensy Direct API.
+        Deprecate Flow.
+        
+        Endpoint: POST /flows/{flowId}/deprecate
 
         Args:
             flow_id: The flow ID to deprecate.
@@ -1259,7 +1305,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         redirect_url: str
     ) -> Dict[str, Any]:
         """
-        Create a payment configuration via the AiSensy Direct API.
+        Create Payment Configuration.
+        
+        Endpoint: POST /payment_configuration
 
         Args:
             configuration_name: Name of the payment configuration.
@@ -1318,7 +1366,9 @@ class AiSensyDirectApiPostClient(AiSensyDirectApiClient):
         redirect_url: str
     ) -> Dict[str, Any]:
         """
-        Generate OAuth link for payment configuration via the AiSensy Direct API.
+        Generate Payment Configuration OAuth Link.
+        
+        Endpoint: POST /generate_payment_configuration_oauth_link
 
         Args:
             configuration_name: Name of the payment configuration.
