@@ -5,7 +5,7 @@ Fetches Messaging Health Status from the AiSensy Direct API.
 """
 from typing import Dict, Any
 
-from .... import mcp
+from ... import mcp
 from ....clients import get_direct_api_post_client
 from ....models import MessagingHealthStatusRequest
 from app import logger

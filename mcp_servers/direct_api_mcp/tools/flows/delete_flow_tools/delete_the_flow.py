@@ -5,7 +5,7 @@ Deletes a flow via the AiSensy Direct API.
 """
 from typing import Dict, Any
 
-from .... import mcp
+from ... import mcp
 from ....clients import get_direct_api_delete_client
 from ....models import DeleteFlowRequest
 from app import logger

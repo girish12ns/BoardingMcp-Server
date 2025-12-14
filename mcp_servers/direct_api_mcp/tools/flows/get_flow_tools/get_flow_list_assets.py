@@ -5,7 +5,7 @@ Fetches assets for a specific flow from the AiSensy Direct API.
 """
 from typing import Dict, Any
 
-from .... import mcp
+from ... import mcp
 from ....clients import get_direct_api_get_client
 from ....models import GetFlowIdRequest
 from app import logger

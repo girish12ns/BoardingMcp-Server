@@ -5,7 +5,7 @@ Updates the business profile details via the AiSensy Direct API.
 """
 from typing import Dict, Any, Optional, List
 
-from .... import mcp
+from ... import mcp
 from ....clients import get_direct_api_patch_client
 from ....models import UpdateBusinessProfileDetailsRequest
 from app import logger

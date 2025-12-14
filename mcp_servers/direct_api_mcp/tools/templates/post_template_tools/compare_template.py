@@ -5,7 +5,7 @@ Compares templates via the AiSensy Direct API.
 """
 from typing import Dict, Any, List
 
-from .... import mcp
+from ... import mcp
 from ....clients import get_direct_api_post_client
 from ....models import CompareTemplateRequest
 from app import logger

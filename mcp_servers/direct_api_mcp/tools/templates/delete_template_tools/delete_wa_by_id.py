@@ -5,7 +5,7 @@ Deletes a WhatsApp template by ID via the AiSensy Direct API.
 """
 from typing import Dict, Any
 
-from .... import mcp
+from ... import mcp
 from ....clients import get_direct_api_delete_client
 from ....models import DeleteWaTemplateByIdRequest
 from app import logger

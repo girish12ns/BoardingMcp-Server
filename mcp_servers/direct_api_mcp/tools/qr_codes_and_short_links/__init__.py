@@ -1,6 +1,6 @@
 from .get_qr_code_tools import get_qr_codes
 from .post_qr_code_tools import create_qr_code_and_short_link
-from .patch_update_qr_code import update_qr_code
+from .patch_qr_code_tools import update_qr_code
 
 
 

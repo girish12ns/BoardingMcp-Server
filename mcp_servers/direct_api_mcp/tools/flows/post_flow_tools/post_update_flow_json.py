@@ -5,7 +5,7 @@ Updates a flow's JSON via the AiSensy Direct API.
 """
 from typing import Dict, Any
 
-from .... import mcp
+from ... import mcp
 from ....clients import get_direct_api_post_client
 from ....models import UpdateFlowJsonRequest
 from app import logger

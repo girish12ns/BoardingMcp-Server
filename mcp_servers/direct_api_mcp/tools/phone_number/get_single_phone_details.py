@@ -5,8 +5,8 @@ Fetches the primary/default phone number from the AiSensy Direct API.
 """
 from typing import Dict, Any
 
-from .... import mcp
-from ....clients import get_direct_api_get_client
+from .. import mcp
+from ...clients import get_direct_api_get_client
 from app import logger
 
 

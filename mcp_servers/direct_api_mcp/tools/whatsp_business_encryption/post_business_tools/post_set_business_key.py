@@ -5,7 +5,7 @@ Sets the business public key for WhatsApp Business encryption via the AiSensy Di
 """
 from typing import Dict, Any
 
-from .... import mcp
+from ... import mcp
 from ....clients import get_direct_api_post_client
 from ....models import SetBusinessPublicKeyRequest
 from app import logger

@@ -1,4 +1,4 @@
-from .whatsp_get_payment_configuration import get_payment_configurations
+from .whatsp_get_payment_configurations import get_payment_configurations
 from .get_payment_by_name import get_payment_configuration_by_name
 
 

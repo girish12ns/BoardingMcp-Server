@@ -5,7 +5,7 @@ Creates a QR code and short link via the AiSensy Direct API.
 """
 from typing import Dict, Any
 
-from .... import mcp
+from ... import mcp
 from ....clients import get_direct_api_post_client
 from ....models import CreateQrCodeAndShortLinkRequest
 from app import logger

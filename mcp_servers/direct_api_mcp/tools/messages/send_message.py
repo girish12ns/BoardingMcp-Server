@@ -5,9 +5,9 @@ Sends a WhatsApp message via the AiSensy Direct API.
 """
 from typing import Dict, Any
 
-from .... import mcp
-from ....clients import get_direct_api_post_client
-from ....models import SendMessageRequest
+from .. import mcp
+from ...clients import get_direct_api_post_client
+from ...models import SendMessageRequest
 from app import logger
 
 

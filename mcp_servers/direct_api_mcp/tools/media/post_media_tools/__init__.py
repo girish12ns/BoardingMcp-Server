@@ -1,4 +1,4 @@
-from .upload_media import upload_media
+from .post_upload_media import upload_media
 from .retrieve_media_by_id import retrieve_media_by_id
 from .create_upload_session import create_upload_session
 from .upload_media_to_session import upload_media_to_session

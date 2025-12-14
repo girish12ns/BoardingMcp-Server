@@ -5,9 +5,9 @@ Sends a Marketing Lite message via the AiSensy Direct API.
 """
 from typing import Dict, Any
 
-from .... import mcp
-from ....clients import get_direct_api_post_client
-from ....models import SendMarketingLiteMessageRequest
+from .. import mcp
+from ...clients import get_direct_api_post_client
+from ...models import SendMarketingLiteMessageRequest
 from app import logger
 
 
