@@ -52,3 +52,6 @@ boarding-server = "app.main:main"
 
 [tool.setuptools.packages.find]
 exclude = ["tests*", "*.tests", "*.tests.*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

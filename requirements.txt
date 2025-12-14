@@ -5,3 +5,9 @@ aiohttp
 
 #image model
 google-generativeai
+
+
+#test_mcp_server
+pytest-asyncio
+inline_snapshot
+inline-snapshot[black]
