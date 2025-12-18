@@ -8,8 +8,8 @@ from typing import List, Optional, Any, Dict
 
 class BusinessProfile(BaseModel):
     """Response model for get_business_profile_by_id endpoint."""
-    
-    id: str
+
+    id: str 
     active: bool
     display_name: str
     project_ids: List[str]
@@ -27,7 +27,7 @@ class BusinessProfile(BaseModel):
     company_size: int = Field(alias="companySize")
     password: bool
     
-    class Config:
+    class ConfigDict:
         populate_by_name = True
 
 
@@ -57,7 +57,7 @@ class BusinessProfileItem(BaseModel):
     company_size: int = Field(alias="companySize")
     password: bool
     
-    class Config:
+    class ConfigDict:
         populate_by_name = True
 
 
@@ -117,8 +117,8 @@ class PartnerDetails(BaseModel):
     webhook_url: str
     created_at: int
     updated_at: int
-    
-    class Config:
+
+    class ConfigDict:
         populate_by_name = True
 
 
@@ -143,7 +143,7 @@ class CentralBalanceMetrics(BaseModel):
         alias="creditUsageCountryWise"
     )
     
-    class Config:
+    class ConfigDict:
         populate_by_name = True
 
 
@@ -243,8 +243,8 @@ class WccAnalyticsItem(BaseModel):
         default=None, 
         alias="mcTemplateCreditMetrics"
     )
-    
-    class Config:
+
+    class ConfigDict:
         populate_by_name = True
 
 
@@ -253,7 +253,7 @@ class WccAnalyticsData(BaseModel):
     
     wcc_analytics: List[WccAnalyticsItem] = Field(alias="wccAnalytics")
     
-    class Config:
+    class ConfigDict:
         populate_by_name = True
 
 
@@ -283,8 +283,8 @@ class BillingRecordItem(BaseModel):
     client_id: str = Field(alias="clientId")
     created_at: str = Field(alias="createdAt")
     updated_at: str = Field(alias="updatedAt")
-    
-    class Config:
+
+    class ConfigDict:
         populate_by_name = True
 
 

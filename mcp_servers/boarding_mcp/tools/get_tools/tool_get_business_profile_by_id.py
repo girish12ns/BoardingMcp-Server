@@ -3,10 +3,9 @@ MCP Tool: Get Business Profile by ID
 
 Fetches the business profile details for the configured business ID.
 """
-from typing import Dict, Any
-
 from .. import mcp
 from ...clients import get_aisensy_get_client
+from ...models import BusinessProfile
 from app import logger
 
 
@@ -30,15 +29,16 @@ from app import logger
         "category": "Business Management"
     }
 )
-async def get_business_profile_by_id() -> Dict[str, Any]:
+async def get_business_profile_by_id() -> BusinessProfile:
     """
     Fetch the business profile by configured business ID.
     
     Returns:
-        Dict containing:
-        - success (bool): Whether the operation was successful
-        - data (dict): Business profile details if successful
-        - error (str): Error message if unsuccessful
+        BusinessProfile: The business profile details.
+        
+    Raises:
+        ValueError: If the API returns an error response.
+        Exception: For unexpected errors.
     """
     try:
         async with get_aisensy_get_client() as client:
@@ -46,17 +46,15 @@ async def get_business_profile_by_id() -> Dict[str, Any]:
             
             if response.get("success"):
                 logger.info("Successfully retrieved business profile by ID")
+                return BusinessProfile(**response["data"])
             else:
-                logger.warning(
-                    f"Failed to retrieve business profile: {response.get('error')}"
-                )
-            
-            return response
-        
+                error_msg = f"Failed to retrieve business profile: {response.get('error')}"
+                logger.warning(error_msg)
+                raise ValueError(error_msg)
+
+    except ValueError:
+        raise  # Re-raise ValueError as-is
     except Exception as e:
         error_msg = f"Unexpected error fetching business profile: {str(e)}"
         logger.exception(error_msg)
-        return {
-            "success": False,
-            "error": error_msg
-        }
+        raise RuntimeError(error_msg)

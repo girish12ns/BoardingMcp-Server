@@ -7,6 +7,7 @@ from typing import Dict, Any
 
 from .. import mcp
 from ...clients import get_aisensy_get_client
+from ...models import AllBusinessProfilesResponse
 from app import logger
 
 
@@ -31,7 +32,7 @@ from app import logger
         "category": "Business Management"
     }
 )
-async def get_all_business_profiles() -> Dict[str, Any]:
+async def get_all_business_profiles() -> AllBusinessProfilesResponse:
     """
     Fetch all business profiles for the partner.
     
@@ -49,12 +50,16 @@ async def get_all_business_profiles() -> Dict[str, Any]:
                 data = response.get("data", [])
                 count = len(data) if isinstance(data, list) else "unknown"
                 logger.info(f"Successfully retrieved {count} business profiles")
+                return AllBusinessProfilesResponse(profiles=response["data"])
             else:
                 logger.warning(
                     f"Failed to retrieve business profiles: {response.get('error')}"
                 )
+                error_msg = f"Failed to retrieve business profiles: {response.get('error')}"
+                logger.warning(error_msg)
+                raise ValueError(error_msg)
             
-            return response
+        
         
     except Exception as e:
         error_msg = f"Unexpected error fetching business profiles: {str(e)}"
