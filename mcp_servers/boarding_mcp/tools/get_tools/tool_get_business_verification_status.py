@@ -8,6 +8,7 @@ from typing import Dict, Any
 from .. import mcp
 from ...models import ProjectIdRequest
 from ...clients import get_aisensy_get_client
+from ...models import BusinessVerificationStatusResponse
 from app import logger
 
 
@@ -33,7 +34,7 @@ from app import logger
         "category": "KYC & Compliance"
     }
 )
-async def get_business_verification_status(project_id: str) -> Dict[str, Any]:
+async def get_business_verification_status(project_id: str) -> BusinessVerificationStatusResponse:
     """
     Fetch business verification status for a project.
     
@@ -62,14 +63,22 @@ async def get_business_verification_status(project_id: str) -> Dict[str, Any]:
                     f"Successfully retrieved business verification status "
                     f"for project: {validated_project_id}"
                 )
+                return BusinessVerificationStatusResponse(**response)
+
             else:
                 logger.warning(
                     f"Failed to retrieve business verification status "
-                    f"for project {validated_project_id}: {response.get('error')}"
+                    f"for project {validated_project_id}: {response.get('error')}")
+                error_msg = (
+                    f"Failed to retrieve business verification status: "
+                    f"{response.get('error')}"
                 )
+                logger.warning(error_msg)
+                raise ValueError(error_msg)
+                
+
             
-            return response
-        
+
     except ValueError as e:
         error_msg = f"Validation error: {str(e)}"
         logger.error(error_msg)

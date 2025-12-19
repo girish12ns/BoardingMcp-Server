@@ -8,6 +8,7 @@ from typing import Dict, Any, Optional
 from ..import mcp
 from ...models import BusinessProjectsRequest
 from ...clients import get_aisensy_get_client
+from ...models import ProjectResponse
 from app import logger
 
 
@@ -36,7 +37,7 @@ from app import logger
 async def get_all_business_projects(
     fields: Optional[str] = None,
     additional_fields: Optional[str] = None
-) -> Dict[str, Any]:
+) -> ProjectResponse:
     """
     Fetch all projects for the configured business.
     
@@ -69,12 +70,16 @@ async def get_all_business_projects(
                 data = response.get("data", [])
                 count = len(data) if isinstance(data, list) else "unknown"
                 logger.info(f"Successfully retrieved {count} business projects")
+                return ProjectResponse(projects=response["data"])
             else:
                 logger.warning(
                     f"Failed to retrieve business projects: {response.get('error')}"
                 )
+                error_msg = f"Failed to retrieve business projects: {response.get('error')}"
+                logger.warning(error_msg)
+                raise ValueError(error_msg)
             
-            return response
+
         
     except ValueError as e:
         error_msg = f"Validation error: {str(e)}"

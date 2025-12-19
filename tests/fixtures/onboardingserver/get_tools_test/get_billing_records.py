@@ -34,4 +34,3 @@ async def test_wcc_usage_analytics(project_id: str, main_mcp_client: Client[Fast
     
     # Add assertions
     assert result.data is not None
-    assert isinstance(result.data, dict)

@@ -22,7 +22,8 @@ from .get_response import (BusinessProfile,
                            PartnerDetails,
                            WccUsageAnalyticsResponse,
                            BillingRecordsResponse,
-                           ProjectResponse)
+                           ProjectResponse,
+                           ProjectIDResponse)
 
 
 __all__ = [
@@ -45,5 +46,5 @@ __all__ = [
     "PartnerDetails",
     "WccUsageAnalyticsResponse",
     "BillingRecordsResponse",
-    "ProjectResponse",
+    "ProjectIDResponse",
 ]

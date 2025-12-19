@@ -22,7 +22,6 @@ async def test_get_all_business_profiles(main_mcp_client: Client[FastMCPTranspor
     # Then call the tool
     result = await main_mcp_client.call_tool("get_partner_details", arguments={})
     print("\n=== Result ===")
-    profile = result.data["data"]
-    print(profile)
+    print(result.data)
    
     

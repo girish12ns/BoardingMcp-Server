@@ -8,6 +8,7 @@ from typing import Dict, Any
 from ..import mcp
 from ...models import ProjectIdRequest
 from ...clients import get_aisensy_get_client
+from ...models import ProjectIDResponse
 from app import logger
 
 
@@ -31,7 +32,7 @@ from app import logger
         "category": "Project Management"
     }
 )
-async def get_project_by_id(project_id: str) -> Dict[str, Any]:
+async def get_project_by_id(project_id: str) -> ProjectIDResponse:
     """
     Fetch project details by project ID.
     
@@ -58,13 +59,20 @@ async def get_project_by_id(project_id: str) -> Dict[str, Any]:
                 logger.info(
                     f"Successfully retrieved project details for: {validated_project_id}"
                 )
+                return ProjectIDResponse(**response)
             else:
                 logger.warning(
                     f"Failed to retrieve project {validated_project_id}: "
                     f"{response.get('error')}"
                 )
+                error_msg = (
+                    f"Failed to retrieve project {validated_project_id}: "
+                    f"{response.get('error')}"
+                )  
+                logger.warning(error_msg)
+                raise ValueError(error_msg)         
             
-            return response
+      
         
     except ValueError as e:
         error_msg = f"Validation error: {str(e)}"

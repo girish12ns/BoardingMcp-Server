@@ -358,3 +358,89 @@ class ProjectResponse(BaseModel):
     
     success: bool
     data: ProjectDetails
+
+
+
+
+
+#============================================================
+# 10. get_project_by_id (Old Model - To be Deprecated)
+
+from pydantic import BaseModel, Field, HttpUrl
+from typing import Optional
+from enum import Enum
+
+
+class QualityRating(str, Enum):
+    GREEN = "GREEN"
+    YELLOW = "YELLOW"
+    RED = "RED"
+
+
+class DisplayNameStatus(str, Enum):
+    APPROVED = "APPROVED"
+    PENDING = "PENDING"
+    REJECTED = "REJECTED"
+
+
+class SubscriptionStatus(str, Enum):
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    SUSPENDED = "suspended"
+
+
+class BusinessVertical(str, Enum):
+    PROF_SERVICES = "PROF_SERVICES"
+    RETAIL = "RETAIL"
+    EDUCATION = "EDUCATION"
+    HEALTH = "HEALTH"
+    FINANCIAL = "FINANCIAL"
+    OTHER = "OTHER"
+
+
+class WABusinessProfile(BaseModel):
+    address: Optional[str] = None
+    description: Optional[str] = None
+    email: Optional[str] = None
+    websites: Optional[list[str]] = None
+    vertical: Optional[str] = None
+
+
+class ProjectData(BaseModel):
+    type: str
+    id: str
+    name: str
+    business_id: str
+    partner_id: str
+    plan_activated_on: int
+    status: str
+    sandbox: bool
+    active_plan: str
+    created_at: int
+    updated_at: int
+    plan_renewal_on: int
+    scheduled_subscription_changes: Optional[dict] = None
+    mau_quota: int
+    mau_usage: int
+    credit: int
+    wa_number: str
+    wa_messaging_tier: str
+    wa_display_name_status: str
+    fb_business_manager_status: str
+    wa_display_name: str
+    wa_quality_rating: str
+    wa_about: str
+    wa_display_image: Optional[str] = None
+    wa_business_profile: WABusinessProfile
+    billing_currency: str
+    timezone: str
+    subscription_started_on: int
+    is_whatsapp_verified: bool
+    subscription_status: str
+    daily_template_limit: int
+    waba_app_status: Optional[str] = None
+
+
+class ProjectIDResponse(BaseModel):
+    success: bool
+    data: ProjectData

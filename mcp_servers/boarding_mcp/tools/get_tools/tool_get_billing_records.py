@@ -8,6 +8,7 @@ from typing import Dict, Any
 from ..import mcp
 from ...models import ProjectIdRequest
 from ...clients import get_aisensy_get_client
+from ...models import BillingRecordsResponse
 from app import logger
 
 
@@ -34,7 +35,7 @@ from app import logger
         "category": "Analytics & Billing"
     }
 )
-async def get_billing_records(project_id: str) -> Dict[str, Any]:
+async def get_billing_records(project_id: str) -> BillingRecordsResponse:
     """
     Fetch billing records for a project.
     
@@ -61,13 +62,19 @@ async def get_billing_records(project_id: str) -> Dict[str, Any]:
                 logger.info(
                     f"Successfully retrieved billing records for project: {validated_project_id}"
                 )
+                return BillingRecordsResponse(**response)
             else:
                 logger.warning(
                     f"Failed to retrieve billing records for project {validated_project_id}: "
                     f"{response.get('error')}"
                 )
+                error_msg = (
+                    f"Failed to retrieve billing records for project "
+                    f"{validated_project_id}: {response.get('error')}"
+                )
+                logger.warning(error_msg) 
+                raise ValueError(error_msg)    
             
-            return response
         
     except ValueError as e:
         error_msg = f"Validation error: {str(e)}"

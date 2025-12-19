@@ -8,6 +8,7 @@ async def main_mcp_client():
     async with Client("mcp_servers/onboardserver.py") as mcp_client:
         yield mcp_client
 
+
 @pytest.mark.parametrize(
     "project_id",
     [
@@ -34,4 +35,4 @@ async def test_get_kyc_submission(project_id: str, main_mcp_client: Client[FastM
     
     # Add assertions
     assert result.data is not None
-    assert isinstance(result.data, dict)
+ 

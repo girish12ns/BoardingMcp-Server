@@ -8,6 +8,7 @@ from typing import Dict, Any
 from ..import mcp
 from ...models import ProjectIdRequest
 from ...clients import get_aisensy_get_client
+# from ...models import WccUsageAnalyticsResponse
 from app import logger
 
 
@@ -62,13 +63,19 @@ async def get_wcc_usage_analytics(project_id: str) -> Dict[str, Any]:
                 logger.info(
                     f"Successfully retrieved WCC analytics for project: {validated_project_id}"
                 )
+                return response
             else:
                 logger.warning(
                     f"Failed to retrieve WCC analytics for project {validated_project_id}: "
                     f"{response.get('error')}"
                 )
+                error_msg = (
+                    f"Failed to retrieve WCC analytics for project "
+                    f"{validated_project_id}: {response.get('error')}"
+                )
+                logger.warning(error_msg)
+                raise ValueError(error_msg)       
             
-            return response
         
     except ValueError as e:
         error_msg = f"Validation error: {str(e)}"

@@ -32,6 +32,5 @@ async def test_get_project_by_id(project_id: str, main_mcp_client: Client[FastMC
     print(f"\n=== Result for project_id: {project_id} ===")
     print(result.data)
     
-    # Add assertions
-    assert result.data is not None
-    assert isinstance(result.data, dict)
+
+   

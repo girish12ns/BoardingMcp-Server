@@ -34,4 +34,4 @@ async def test_get_business_verification(project_id: str, main_mcp_client: Clien
     
     # Add assertions
     assert result.data is not None
-    assert isinstance(result.data, dict)
+   

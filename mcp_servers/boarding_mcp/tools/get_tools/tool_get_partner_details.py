@@ -8,6 +8,7 @@ from typing import Dict, Any
 from ..import mcp
 from ...clients import get_aisensy_get_client
 from app import logger
+from ...models import PartnerDetails
 
 
 @mcp.tool(
@@ -31,12 +32,13 @@ from app import logger
         "category": "Partner Management"
     }
 )
-async def get_partner_details() -> Dict[str, Any]:
+async def get_partner_details() -> PartnerDetails:
     """
     Fetch partner account details.
     
     Returns:
-        Dict containing:
+        PartnerDetails object containing partner details if successful
+        or error information if unsuccessful.
         - success (bool): Whether the operation was successful
         - data (dict): Partner details if successful
         - error (str): Error message if unsuccessful
@@ -47,12 +49,16 @@ async def get_partner_details() -> Dict[str, Any]:
             
             if response.get("success"):
                 logger.info("Successfully retrieved partner details")
+                return PartnerDetails(**response["data"])
             else:
                 logger.warning(
                     f"Failed to retrieve partner details: {response.get('error')}"
                 )
+                error_msg = f"Failed to retrieve partner details: {response.get('error')}"
+                logger.warning(error_msg)
+                raise ValueError(error_msg)       
             
-            return response
+       
         
     except Exception as e:
         error_msg = f"Unexpected error fetching partner details: {str(e)}"

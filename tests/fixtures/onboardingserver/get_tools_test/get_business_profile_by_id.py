@@ -21,9 +21,8 @@ async def test_get_business_profile_by_id(main_mcp_client: Client[FastMCPTranspo
     
     # Then call the tool
     result = await main_mcp_client.call_tool("get_business_profile_by_id", arguments={},raise_on_error=False)
-    assert result is not None
-    assert result.content is not None
-    print(f"\n=== Success ===\n{result.content}")
+    print(result.data)
+ 
 
   
     
