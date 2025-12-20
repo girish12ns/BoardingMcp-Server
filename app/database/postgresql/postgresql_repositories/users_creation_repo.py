@@ -35,3 +35,5 @@ class UserCreationRepository:
             self.session.rollback()
             logger.error(f"Failed to create User: {e}")
             raise e
+
+

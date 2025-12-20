@@ -16,6 +16,7 @@ from sqlmodel import create_engine, text, Session
 from .postgresql_connection import get_session
 from .postgresql_repositories import UserCreationRepository, BusinessCreationRepository
 
+
 session = next(get_session())
 
 # 1. Create User first

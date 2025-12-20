@@ -6,7 +6,7 @@ Creates a new business profile in the AiSensy API.
 from typing import Dict, Any
 
 from ..import mcp
-from ...models import CreateBusinessProfileRequest
+from ...models import CreateBusinessProfileRequest, BusinessCreationResponse
 from ...clients import get_aisensy_post_client
 from app import logger
 
@@ -41,28 +41,11 @@ async def create_business_profile(
     currency: str,
     company_size: str,
     password: str
-) -> Dict[str, Any]:
+) -> BusinessCreationResponse:
     """
     Create a new business profile.
-    
-    Args:
-        display_name: Display name for the business.
-        email: Business email address.
-        company: Company name.
-        contact: Contact number.
-        timezone: Timezone (e.g., "Asia/Calcutta GMT+05:30").
-        currency: Currency code (e.g., "INR").
-        company_size: Size of the company (e.g., "10 - 20").
-        password: Password for the business account (min 8 characters).
-    
-    Returns:
-        Dict containing:
-        - success (bool): Whether the operation was successful
-        - data (dict): Created business profile details if successful
-        - error (str): Error message if unsuccessful
     """
     try:
-        # Validate input using Pydantic model
         request = CreateBusinessProfileRequest(
             display_name=display_name,
             email=email,
@@ -88,25 +71,35 @@ async def create_business_profile(
             
             if response.get("success"):
                 logger.info("Successfully created business profile")
-            else:
-                logger.warning(
-                    f"Failed to create business profile: {response.get('error')}"
+                return BusinessCreationResponse(
+                    success=True,
+                    data=response["data"]
                 )
-            
-            return response
-        
+            else:
+                error_msg = response.get("error", "Unknown error")
+                status_code = response.get("status_code", "N/A")
+                details = response.get("details", {})
+                
+                full_error = f"{error_msg} | Status: {status_code} | Details: {details}"
+                logger.warning(f"Failed to create business profile: {full_error}")
+                
+                return BusinessCreationResponse(
+                    success=False,
+                    error=full_error
+                )
+
     except ValueError as e:
         error_msg = f"Validation error: {str(e)}"
         logger.error(error_msg)
-        return {
-            "success": False,
-            "error": error_msg
-        }
+        return BusinessCreationResponse(
+            success=False,
+            error=error_msg
+        )
         
     except Exception as e:
-        error_msg = f"Unexpected error creating business profile: {str(e)}"
+        error_msg = f"Unexpected error: {str(e)}"
         logger.exception(error_msg)
-        return {
-            "success": False,
-            "error": error_msg
-        }
+        return BusinessCreationResponse(
+            success=False,
+            error=error_msg
+        )

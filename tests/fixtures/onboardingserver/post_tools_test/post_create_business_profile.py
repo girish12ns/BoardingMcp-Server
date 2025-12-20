@@ -2,6 +2,7 @@
 
 import pytest
 import pytest_asyncio
+import uuid
 from fastmcp.client import Client
 from fastmcp.client.transports import FastMCPTransport
 
@@ -16,26 +17,18 @@ async def main_mcp_client():
 @pytest.mark.parametrize(
     "display_name,email,company,contact,timezone,currency,company_size,password",
     [
+    
         (
-            "CallHippo Support",
-            "support@callhippo.com",
-            "CallHippo",
-            "918116856153",
+            "DataFlow Analytics",
+            "info_791d6e1d@dataflow.com",
+            "DataFlow Inc",
+            "918877665544",
             "Asia/Calcutta GMT+05:30",
-            "INR",
-            "10 - 20",
-            "somerandompassword"
-        ),
-        (
-            "TechStartup Inc",
-            "hello@techstartup.com",
-            "TechStartup",
-            "919876543210",
-            "Asia/Kolkata",
-            "INR",
-            "5 - 10",
-            "anotherpassword123"
-        ),
+            "USD",
+            "50 - 100",
+            "Analytics@123"
+        )
+      
     ],
 )
 @pytest.mark.asyncio
@@ -65,7 +58,8 @@ async def test_create_business_profile(
         },
     )
     print(f"\n=== Create Business Profile: {display_name} ===")
+    print(f"Email used: {email}")
     print(result.data)
-
+    
     # Add assertions
     assert result.data is not None

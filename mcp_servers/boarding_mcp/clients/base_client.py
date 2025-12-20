@@ -55,6 +55,7 @@ class AiSensyBaseClient:
             422: "Validation error",
             429: "Rate limit exceeded",
             500: "Server error",
+            503: "Service unavailable"
         }
         return {
             "success": False,
