@@ -15,3 +15,5 @@ inline-snapshot[black]
 
 #databse:
 sqlmodel
+psycopg2
+psycopg
