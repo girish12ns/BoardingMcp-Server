@@ -1,6 +1,7 @@
 fastmcp
 fastapi
 aiohttp
+fastapi
 
 
 #image model
@@ -11,3 +12,6 @@ google-generativeai
 pytest-asyncio
 inline_snapshot
 inline-snapshot[black]
+
+#databse:
+sqlmodel
